@@ -1,0 +1,18 @@
+.temporaryforall {
+    display: flex;
+    justify-content: space-between;
+    padding: 100px ;
+    div{
+        width: 80px;
+        height: 80px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+}
+.temporaryforabi{
+    border: 2px solid blue;
+}
+.temporaryforquermez{
+    border: 2px solid red;
+}
