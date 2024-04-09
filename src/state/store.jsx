@@ -1,7 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import logicreducer from "./gamelogic/Gamelogic"
+import {counterSlice} from "./gamelogic/Gamelogic"
 export const store = configureStore({
-  reducer:{
-    logic:logicreducer
-  },
+  reducer: counterSlice.reducer
 })

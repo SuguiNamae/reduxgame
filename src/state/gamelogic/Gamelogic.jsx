@@ -1,21 +1,20 @@
-const { createSlice } = require("@reduxjs/toolkit")
+import { createSlice } from '@reduxjs/toolkit'
 
-const initialstate = {
+export const counterSlice = createSlice({
+  name: 'counter',
+  initialState: {
+    energy: 5,
     life:100,
-    energy:5,
-}
-const logicslice = createSlice({
-    name: "logic",
-    initialstate,
-    reducers:{
-        hit: (state, action)=>{
-            state.life +=1
-        },
-        shoot: (state, action)=>{
-            state.energy -=1
-        }
+  },
+  reducers: {
+    shoot: state => {
+      
+      state.energy -= 1
+    },
+    hit: state => {
+      state.life -= 15
     }
+  }
 })
 
-export default logicslice.reducer
-ex
+export const { shoot, hit } = counterSlice.actions
