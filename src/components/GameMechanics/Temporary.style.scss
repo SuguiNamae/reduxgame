@@ -1,8 +1,8 @@
 @keyframes movePath {
     0% { transform: translateX(0) translateY(0); }
-    25% { transform: translateX(78.5px) translateY(50px); }
-    50% { transform: translateX(157px) translateY(100px); }
-    75% { transform: translateX(235.5px) translateY(50px); }
+    25% { transform: translateX(78.5px) translateY(-50px); }
+    50% { transform: translateX(157px) translateY(-100px); }
+    75% { transform: translateX(235.5px) translateY(-50px); }
     100% { transform: translateX(314px) translateY(0); }
   }
 
@@ -22,18 +22,19 @@
     }
     .temporaryforball{
         background-color: aqua;
+        border-radius: 100px;
+        position: absolute;
+        z-index: -1;
     }
 }
 .temporaryforabi{
     border: 2px solid blue;
-    animation: movePath 4s infinite forwards ;
-    transition: 8s;
-
-
 }
 .temporaryforquermez{
     border: 2px solid red;
 }
 .temporaryforball{
+    animation: movePath 3s infinite
+    cubic-bezier(1, 1, 1, 1);
 
 }

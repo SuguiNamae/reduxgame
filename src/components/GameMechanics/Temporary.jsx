@@ -1,8 +1,8 @@
 import React from "react";
 import "./Temporary.style.scss";
-import { hit, shoot } from "./../state/gamelogic/Gamelogic";
+import { hit, shoot } from "../../state/gamelogic/Gamelogic";
 import { useSelector, useDispatch } from "react-redux";
-import { store } from "./../state/store";
+import { store } from "../../state/store";
 // import logicslice from "./gamelogic/Gamelogic";
 
 const Temporary = () => {
