@@ -1,11 +1,12 @@
 import React from "react";
 import "./Temporary.style.scss";
-import { hit, shoot } from "../../state/gamelogic/Gamelogic";
+import { GameState, hit, shoot } from "../../state/gamelogic/Gamelogic";
 import { useSelector, useDispatch } from "react-redux";
 
 const Temporary = () => {
-  const life_score = useSelector((state) => state.life);
-  const energy_score = useSelector((state) => state.energy);
+  const trying = useSelector(GameState)
+  const life_score = trying.life;
+  const energy_score = trying.energy;
   const dispatch = useDispatch()
   return (
     <div className="temporaryforall">

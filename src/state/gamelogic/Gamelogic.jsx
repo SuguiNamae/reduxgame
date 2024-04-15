@@ -1,20 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
-export const counterSlice = createSlice({
-  name: 'counter',
+const gameSlice = createSlice({
+  name: "gameLogic",
   initialState: {
     energy: 5,
-    life:100,
+    life: 100,
   },
   reducers: {
-    shoot: state => {
-      
-      state.energy -= 1
+    shoot: (state) => {
+      state.energy -= 1;
     },
-    hit: state => {
-      state.life -= 15
-    }
-  }
-})
+    hit: (state) => {
+      state.life -= 15;
+    },
+  },
+});
 
-export const { shoot, hit } = counterSlice.actions
+export const GameState = (state) => state.gameLogic;
+export const { shoot, hit } = gameSlice.actions;
+export default gameSlice.reducer;

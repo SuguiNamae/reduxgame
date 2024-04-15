@@ -1,5 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import {counterSlice} from "./gamelogic/Gamelogic"
+import gameLogicReducer from "./gamelogic/Gamelogic";
+import playerInfoReducer from "./playerinfo/playerinfo";
+
 export const store = configureStore({
-  reducer: counterSlice.reducer
-})
+  reducer: {
+    gameLogic: gameLogicReducer,
+    playerInfo: playerInfoReducer,
+  },
+});

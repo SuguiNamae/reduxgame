@@ -1,16 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const counterSlice = createSlice({
+const playerSlice = createSlice({
   name: "playerInfo",
   initialState: {
-    player1: "hjgv",
-    player2: "nj",
-    difficulty: undefined,
+    player1: "player1",
+    player2: "player2",
+    difficulty: "easy",
   },
   reducers: {
-      saveUser1: (state, action) => action.payload,
-      saveUser2: (state, action) => action.payload,
+    saveUser1: (state, name) => (state.player1 = name.payload),
+    saveUser2: (state, name) => (state.player2 = name.payload),
   },
 });
 
-export const { saveUser1, saveUser2 } = counterSlice.actions;
+export const playerState = (state) => state.playerInfo;
+export const { saveUser1, saveUser2 } = playerSlice.actions;
+export default playerSlice.reducer;
