@@ -2,8 +2,6 @@ import React from "react";
 import "./Temporary.style.scss";
 import { hit, shoot } from "../../state/gamelogic/Gamelogic";
 import { useSelector, useDispatch } from "react-redux";
-import { store } from "../../state/store";
-// import logicslice from "./gamelogic/Gamelogic";
 
 const Temporary = () => {
   const life_score = useSelector((state) => state.life);
