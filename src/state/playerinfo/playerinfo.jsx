@@ -8,8 +8,10 @@ const playerSlice = createSlice({
     difficulty: "easy",
   },
   reducers: {
-    saveUser1: (state, name) => (state.player1 = name.payload),
-    saveUser2: (state, name) => (state.player2 = name.payload),
+    saveUser1: (state, action) =>
+      (state = { ...state, player1: action.payload }),
+    saveUser2: (state, action) =>
+      (state = { ...state, player2: action.payload }),
   },
 });
 

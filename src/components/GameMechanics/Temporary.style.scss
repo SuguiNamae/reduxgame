@@ -1,40 +1,14 @@
-@keyframes movePath {
-    0% { transform: translateX(0) translateY(0); }
-    25% { transform: translateX(78.5px) translateY(-50px); }
-    50% { transform: translateX(157px) translateY(-100px); }
-    75% { transform: translateX(235.5px) translateY(-50px); }
-    100% { transform: translateX(314px) translateY(0); }
-  }
-
-  
-.temporaryforall {
-    display: flex;
-    justify-content: space-between;
-    padding: 100px ;
-    padding-top: 200px;
-    div{
-        width: 80px;
-        height: 80px;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-        color: black;
-    }
-    .temporaryforball{
-        background-color: aqua;
-        border-radius: 100px;
-        position: absolute;
-        z-index: -1;
-    }
+.mainforall{
+    width: 100%;
+    height: 100%;
 }
-.temporaryforabi{
-    border: 2px solid blue;
+#myCanvas{
+    background-color: gray;
+    width: 100%;
+    height: 100dvh;
+    position: relative;
 }
-.temporaryforquermez{
-    border: 2px solid red;
-}
-.temporaryforball{
-    animation: movePath 3s infinite
-    cubic-bezier(1, 1, 1, 1);
-
+.buttontempo{
+    top: 40px;
+    position: absolute;
 }

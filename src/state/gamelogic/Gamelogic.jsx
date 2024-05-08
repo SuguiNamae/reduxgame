@@ -3,15 +3,15 @@ import { createSlice } from "@reduxjs/toolkit";
 const gameSlice = createSlice({
   name: "gameLogic",
   initialState: {
-    energy: 5,
-    life: 100,
+    energyp1: 5,
+    lifep1: 100,
   },
   reducers: {
     shoot: (state) => {
-      state.energy -= 1;
+      state.energyp1 -= 1;
     },
     hit: (state) => {
-      state.life -= 15;
+      state.lifep1 -= 15;
     },
   },
 });

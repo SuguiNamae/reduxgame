@@ -1,15 +1,10 @@
-import logo from "./logo.svg";
 import "./App.css";
-import Temporary from "./components/GameMechanics/Temporary";
-import Intro from "./components/intro/Intro";
-import Initiation from "./components/Initiation/Initiation";
-
+import { RouterProvider } from "react-router";
+import { router } from "./Router/Routing";
 function App() {
   return (
     <div className="App">
-      <Intro />
-      <Initiation/>
-      <Temporary/>
+    <RouterProvider router={router} />
     </div>
   );
 }

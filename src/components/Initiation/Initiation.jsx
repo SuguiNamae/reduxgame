@@ -1,6 +1,6 @@
 import React from "react";
-import { useState } from "react";
 import "./Initiation.style.scss";
+import {Link} from "react-router-dom"
 import {
   playerState,
   saveUser1,
@@ -10,23 +10,30 @@ import { useSelector, useDispatch } from "react-redux";
 const Initiation = () => {
   const player = useSelector(playerState);
   const dispatch = useDispatch();
-  console.log(player);
-  let player1;
-  let player2;
-  const handledifficultyvalue = (event) => {};
+  let player1 = player.player1;
+  let player2 = player.player2;
+  let difficulty = player.difficulty;
 
-  const handleInputChange1 = (event) => {};
-  const handleInputChange2 = (event) => {};
+  const handledifficultyvalue = (event) => {};
+  
+  const handleplayername1 = (event) => {
+    dispatch(saveUser1(event.target.value));
+    console.log(player1);
+  };
+  const handleplayername2 = (event) => {
+    dispatch(saveUser2(event.target.value));
+    console.log(player2);
+  };
 
   return (
     <div className="initiationforall">
       <p>choose your names: </p>
       <label>player1:</label>
-      <input type="text" value={player1} onChange={handleInputChange1} />
+      <input type="text" value={player1} onChange={handleplayername1} />
       <label>player2:</label>
-      <input type="text" value={player2} onChange={handleInputChange2} />
+      <input type="text" value={player2} onChange={handleplayername2} />
       <p>
-        difficulty: {player1} and {player2}
+        difficulty:
       </p>
       <input
         type="radio"
@@ -46,7 +53,7 @@ const Initiation = () => {
         value="hard"
         onClick={handledifficultyvalue}
       />
-      <button>okay im ready</button>
+      <Link to={"/game"}>okay im ready</Link>
     </div>
   );
 };
