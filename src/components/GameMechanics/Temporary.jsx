@@ -6,15 +6,18 @@ const Temporary = () => {
   const [angleValue, setangleValue] = useState("");
   const [powerValue, setpowerValue] = useState("");
   // handling players turn
-  let turnbased = 0;
+  let turnbased = true;
   // making a flag for shooting the projectile
   let spaceKeyPressed = false;
+  // detecting if the ball is still moving
+  let ballInMotion = true;
   // detecting space key pressed
   document.addEventListener("keydown", (event) => {
-    if (event.key === " ") {
+    if (event.key === " " && ballInMotion) {
+      console.log("working1", ballInMotion);
+      ballInMotion = false;
+      shootbal();
       spaceKeyPressed = true;
-      shootbal()
-      turnbased += 1;
     }
   });
   // inputs for angle and power
@@ -41,7 +44,7 @@ const Temporary = () => {
     // declaring players
     const player1 = {
       width: (canvas.width * 1) / 10,
-      height:(canvas.height * 1) / 10,
+      height: (canvas.height * 1) / 10,
       x: canvas.width / 20,
       y: (canvas.height * 9) / 10,
       color: "blue",
@@ -66,20 +69,7 @@ const Temporary = () => {
       ctx.fillStyle = player2.color;
       ctx.fillRect(player2.x, player2.y, player2.width, player2.height);
       ctx.beginPath();
-      ctx.fillStyle = "red";
-      ctx.fillRect(
-        0,
-        (canvas.height * 2) / 3,
-        canvas.width / 100,
-        canvas.height
-      );
-      ctx.fillRect(
-        (canvas.width * 99) / 100,
-        (canvas.height * 2) / 3,
-        canvas.width / 100,
-        canvas.height
-      );
-
+      ctx.fillStyle = "purple";
       ctx.fillRect(
         (canvas.width * 2) / 3,
         (canvas.height * 4.15) / 5,
@@ -98,12 +88,6 @@ const Temporary = () => {
     }
     // moving the players
     function updateplayers(event) {
-      if (player1.x <= projectile.x <= player1.x + player1.width) {
-        console.log("1");
-      }
-      if (player2.x <= projectile.x <= player2.x + player2.width ) {
-        console.log("2");
-      }
       if (player1.x + player1.width > canvas.width / 3) {
         player1.speed.x *= -1;
         player1.x = canvas.width / 3 - player1.width;
@@ -119,7 +103,7 @@ const Temporary = () => {
       if (player2.x + player2.width > canvas.width) {
         player2.speed.x *= -1;
       }
-      if (turnbased % 2 === 0) {
+      if (turnbased  === false) {
         switch (event.key) {
           case "ArrowLeft":
             player1.x -= player1.speed.x;
@@ -131,7 +115,7 @@ const Temporary = () => {
             break;
         }
         drawPlayers();
-      } else if (turnbased % 2 !== 0) {
+      } else if (turnbased === true) {
         switch (event.key) {
           case "ArrowLeft":
             player2.x -= player2.speed.x;
@@ -147,13 +131,16 @@ const Temporary = () => {
     }
     // declaring projectile
     let projectile = {
-      x: canvas.width / 10,
+      x: turnbased === true ? canvas.width / 10 : (canvas.width * 9) / 10,
       y: (7 * canvas.height) / 8,
       radius: 3,
       color: "red",
       velocity: {
-        x: Math.cos(angle) * power ,
-        y: Math.sin(angle) * power ,
+        x:
+          turnbased  === true
+            ? Math.cos(angle) * power
+            : -Math.cos(angle) * power,
+        y: Math.sin(angle) * power,
       },
       gravity: 0.2, // Gravity value
       weight: 0.2, // Weight of the ball
@@ -169,6 +156,32 @@ const Temporary = () => {
     }
     // moving the projectile
     function updateProjectile() {
+      //stop the animation if the ball missed
+      if (projectile.velocity.x === 0 && projectile.velocity.y === 0) {
+        setTimeout(function () {
+          spaceKeyPressed = false;
+          ballInMotion = true;
+          turnbased = !turnbased
+        }, 2000);
+      }
+      // detect the purple walls
+      if (
+        (projectile.x + projectile.radius >= canvas.width / 3 &&
+          projectile.x + projectile.radius <=
+            canvas.width / 3 + canvas.width / 100 &&
+          projectile.y + projectile.radius >= (canvas.height * 4.15) / 5 &&
+          projectile.y + projectile.radius <= canvas.height) ||
+        (projectile.x + projectile.radius >= (canvas.width * 2) / 3 &&
+          projectile.x + projectile.radius <=
+            (canvas.width * 2) / 3 + canvas.width / 100 &&
+          projectile.y + projectile.radius >= (canvas.height * 4.15) / 5 &&
+          projectile.y + projectile.radius <= canvas.height)
+      ) {
+        // Collision with purple barrier detected
+        spaceKeyPressed = false;
+        turnbased = !turnbased
+        ballInMotion = true;
+      }
       if (
         projectile.x + projectile.radius >= player1.x &&
         projectile.x - projectile.radius <= player1.x + player1.width &&
@@ -176,7 +189,9 @@ const Temporary = () => {
         projectile.y - projectile.radius <= player1.y + player1.height
       ) {
         // Collision with player 1 detected
-        console.log("Projectile hit player 1!");
+        spaceKeyPressed = false;
+        turnbased = !turnbased
+        ballInMotion = true;
       }
       if (
         projectile.x + projectile.radius >= player2.x &&
@@ -185,7 +200,9 @@ const Temporary = () => {
         projectile.y - projectile.radius <= player2.y + player2.height
       ) {
         // Collision with player 2 detected
-        console.log("Projectile hit player 2!");
+        spaceKeyPressed = false;
+        turnbased  = !turnbased
+        ballInMotion = true;
       }
       if (!projectile.isFalling) {
         projectile.y -= projectile.velocity.y;
@@ -231,12 +248,12 @@ const Temporary = () => {
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawPlayers();
-    
+
       if (spaceKeyPressed) {
         updateProjectile();
         drawProjectile();
       }
-    
+
       document.addEventListener("keydown", updateplayers);
       requestAnimationFrame(animate);
     }
