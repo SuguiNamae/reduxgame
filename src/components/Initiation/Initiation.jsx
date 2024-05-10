@@ -2,7 +2,7 @@ import React from "react";
 import "./Initiation.style.scss";
 import {Link} from "react-router-dom"
 import {
-  playerState,
+  playerState, 
   saveUser1,
   saveUser2,
 } from "../../state/playerinfo/playerinfo";
