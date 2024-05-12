@@ -6,7 +6,6 @@ const Temporary = () => {
   const [angleValue, setangleValue] = useState("");
   const [powerValue, setpowerValue] = useState("");
   // handling players turn
-  let turnbased = true;
   // making a flag for shooting the projectile
   let spaceKeyPressed = false;
   // detecting if the ball is still moving
@@ -14,10 +13,9 @@ const Temporary = () => {
   // detecting space key pressed
   document.addEventListener("keydown", (event) => {
     if (event.key === " " && ballInMotion) {
-      console.log("working1", ballInMotion);
       ballInMotion = false;
-      shootbal();
       spaceKeyPressed = true;
+      // shootbal();
     }
   });
   // inputs for angle and power
@@ -29,40 +27,38 @@ const Temporary = () => {
   };
   // primary load of screen
   useEffect(() => {
-    shootbal();
+    playerinit();
   });
-  // main animation function
-  const shootbal = () => {
-    // declaring canvas
-    const canvas = document.getElementById("myCanvas");
+
+  // players
+
+  const playerinit = () => {
+    const canvas = document.getElementById("myCanvas2");
     const ctx = canvas.getContext("2d");
-    // color for projectile
-    ctx.fillStyle = "red";
-    //angle and power for projectile
-    let angle = (angleValue * Math.PI) / 180;
-    let power = powerValue * 0.1;
-    // declaring players
+
     const player1 = {
       width: (canvas.width * 1) / 10,
       height: (canvas.height * 1) / 10,
       x: canvas.width / 20,
-      y: (canvas.height * 9) / 10,
+      y: (canvas.height * 6) / 7,
       color: "blue",
       speed: {
-        x: 5,
+        x: 2,
+        y: 2,
       },
     };
     const player2 = {
       width: (canvas.width * 1) / 10,
       height: (canvas.height * 1) / 10,
       x: (canvas.width * 17.1) / 20,
-      y: (canvas.height * 9) / 10,
+      y: (canvas.height * 6) / 7,
       color: "green",
       speed: {
-        x: 5,
+        x: 2,
+        y: 2,
       },
     };
-    // drawing players
+
     function drawPlayers() {
       ctx.fillStyle = player1.color;
       ctx.fillRect(player1.x, player1.y, player1.width, player1.height);
@@ -86,60 +82,102 @@ const Temporary = () => {
       ctx.fill();
       ctx.closePath();
     }
-    // moving the players
+
     function updateplayers(event) {
-      if (player1.x + player1.width > canvas.width / 3) {
-        player1.speed.x *= -1;
-        player1.x = canvas.width / 3 - player1.width;
-      }
-      if (player1.x < 1) {
-        player1.speed.x *= -1;
-        player1.x = 1;
-      }
-      if (player2.x < (canvas.width * 2) / 3) {
-        player2.speed.x *= -1;
-        player2.x = (canvas.width * 2) / 3 + 4;
+      //making sure player one and two wont go off screen
+      // horizantal
+      if (player1.x + player1.width > canvas.width) {
+        player1.x = canvas.width - player1.width;
       }
       if (player2.x + player2.width > canvas.width) {
+        player2.x = canvas.width - player2.width;
+        player2.speed.x *= -1
+      }
+      if (player1.x < 0) {
+        player1.x = 0;
+      }
+      if (player2.x < 0) {
         player2.speed.x *= -1;
+        player2.x = 0;
       }
-      if (turnbased  === false) {
-        switch (event.key) {
-          case "ArrowLeft":
-            player1.x -= player1.speed.x;
-            break;
-          case "ArrowRight":
-            player1.x += player1.speed.x;
-            break;
-          default:
-            break;
-        }
-        drawPlayers();
-      } else if (turnbased === true) {
-        switch (event.key) {
-          case "ArrowLeft":
-            player2.x -= player2.speed.x;
-            break;
-          case "ArrowRight":
-            player2.x += player2.speed.x;
-            break;
-          default:
-            break;
-        }
-        drawPlayers();
+      // vertical
+      if (player1.y > canvas.height - player1.height) {
+        player1.y = canvas.height - player1.height;
       }
+      if (player2.y > canvas.height - player2.height) {
+        player2.y = canvas.height - player2.height;
+        player2.speed.y *= -1
+      }
+      if (player1.y < 0) {
+        player1.y = 0;
+      }
+      if (player2.y < 0) {
+        player2.y = 0;
+        player2.speed.y *= -1
+
+      }
+      // making the players move
+
+      switch (event.key) {
+        case "a":
+          player1.x -= player1.speed.x;
+          player2.x += player2.speed.x;
+          player2.y -= player2.speed.y;
+
+          break;
+        case "d":
+          player1.x += player1.speed.x;
+          player2.x -= player2.speed.x;
+          player2.y += player2.speed.y;
+
+          break;
+        case "s":
+          player1.y += player1.speed.x;
+          player2.x -= player2.speed.x;
+          player2.y += player2.speed.y;
+
+          break;
+        case "w":
+          player1.y -= player1.speed.x;
+          player2.x += player2.speed.x;
+          player2.y -= player2.speed.y;
+
+          break;
+        default:
+          break;
+      }
+      drawPlayers();
     }
+
+    function animatep() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPlayers();
+      document.addEventListener("keydown", updateplayers);
+      requestAnimationFrame(animatep);
+    }
+
+    animatep();
+    shootbal(player1, player2)
+  };
+  // main animation function
+
+  const shootbal = (player1, player2) => {
+    // declaring canvas
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
+    // color for projectile
+    ctx.fillStyle = "red";
+    //angle and power for projectile
+    let angle = (angleValue * Math.PI) / 180;
+    let power = powerValue * 0.1;
     // declaring projectile
     let projectile = {
-      x: turnbased === true ? canvas.width / 10 : (canvas.width * 9) / 10,
+      x: player1.x,
       y: (7 * canvas.height) / 8,
       radius: 3,
       color: "red",
       velocity: {
-        x:
-          turnbased  === true
-            ? Math.cos(angle) * power
-            : -Math.cos(angle) * power,
+        x: Math.cos(angle) * power,
         y: Math.sin(angle) * power,
       },
       gravity: 0.2, // Gravity value
@@ -161,7 +199,6 @@ const Temporary = () => {
         setTimeout(function () {
           spaceKeyPressed = false;
           ballInMotion = true;
-          turnbased = !turnbased
         }, 2000);
       }
       // detect the purple walls
@@ -179,7 +216,6 @@ const Temporary = () => {
       ) {
         // Collision with purple barrier detected
         spaceKeyPressed = false;
-        turnbased = !turnbased
         ballInMotion = true;
       }
       if (
@@ -190,7 +226,6 @@ const Temporary = () => {
       ) {
         // Collision with player 1 detected
         spaceKeyPressed = false;
-        turnbased = !turnbased
         ballInMotion = true;
       }
       if (
@@ -201,7 +236,6 @@ const Temporary = () => {
       ) {
         // Collision with player 2 detected
         spaceKeyPressed = false;
-        turnbased  = !turnbased
         ballInMotion = true;
       }
       if (!projectile.isFalling) {
@@ -247,14 +281,12 @@ const Temporary = () => {
     }
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawPlayers();
 
       if (spaceKeyPressed) {
         updateProjectile();
         drawProjectile();
       }
 
-      document.addEventListener("keydown", updateplayers);
       requestAnimationFrame(animate);
     }
     // calling the animation
@@ -264,6 +296,7 @@ const Temporary = () => {
   return (
     <div className="mainforall">
       <canvas id="myCanvas"></canvas>
+      <canvas id="myCanvas2"></canvas>
 
       <div className="buttontempo">
         <input
@@ -284,3 +317,69 @@ const Temporary = () => {
 };
 
 export default Temporary;
+
+// function drawProjectile() {
+//   ctx.beginPath();
+//   ctx.arc(projectile.x, projectile.y, projectile.radius, 0, Math.PI * 2);
+//   ctx.fillStyle = projectile.color;
+//   ctx.fill();
+//   ctx.closePath();
+// }
+
+// function updateProjectile() {
+//   if (!projectile.isFalling) {
+//     projectile.y -= projectile.velocity.y;
+//     projectile.velocity.y -= projectile.gravity * projectile.weight;
+
+//     if (projectile.velocity.y <= 0) {
+//       projectile.isFalling = true; // Start falling when velocity becomes 0
+//     }
+//   } else {
+//     projectile.y += projectile.velocity.y;
+//     projectile.velocity.y += projectile.gravity * projectile.weight;
+//   }
+
+//   projectile.x += projectile.velocity.x; // Move the projectile horizontally
+
+//   if (projectile.x + projectile.radius > canvas.width) {
+//     projectile.velocity.x = 0;
+//     // ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
+//   }
+//   if (projectile.y + projectile.radius > canvas.height) {
+//     projectile.velocity.y = 0;
+//     projectile.velocity.x = 0;
+//   }
+//   if (projectile.y < 0) {
+//     projectile.velocity.y *= -1;
+//   }
+//   if (projectile.x < 0) {
+//     projectile.velocity.x = 0;
+//   }
+
+//   if (projectile.y === canvas.height) {
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+//     ctx.clearRect(
+//       projectile.x - projectile.radius,
+//       projectile.y - projectile.radius,
+//       projectile.x + projectile.radius,
+//       projectile.y + projectile.radius
+//     );
+//     return;
+//   }
+//   drawProjectile();
+// }
+
+// function animate(event) {
+//   ctx.clearRect(0, 0, canvas.width, canvas.height);
+//   updateProjectile();
+//   document.addEventListener("keydown", () => {
+//     switch (event.key) {
+//       case "apace":
+//         animate();
+//         break;
+//       default:
+//         break;
+//     }
+//   });
+//   requestAnimationFrame(animate);
+// }
