@@ -35,7 +35,6 @@ const Temporary = () => {
   const playerinit = () => {
     const canvas = document.getElementById("myCanvas2");
     const ctx = canvas.getContext("2d");
-
     const player1 = {
       width: (canvas.width * 1) / 10,
       height: (canvas.height * 1) / 10,
@@ -91,7 +90,7 @@ const Temporary = () => {
       }
       if (player2.x + player2.width > canvas.width) {
         player2.x = canvas.width - player2.width;
-        player2.speed.x *= -1
+        player2.speed.x *= -1;
       }
       if (player1.x < 0) {
         player1.x = 0;
@@ -106,15 +105,14 @@ const Temporary = () => {
       }
       if (player2.y > canvas.height - player2.height) {
         player2.y = canvas.height - player2.height;
-        player2.speed.y *= -1
+        player2.speed.y *= -1;
       }
       if (player1.y < 0) {
         player1.y = 0;
       }
       if (player2.y < 0) {
         player2.y = 0;
-        player2.speed.y *= -1
-
+        player2.speed.y *= -1;
       }
       // making the players move
 
@@ -155,13 +153,18 @@ const Temporary = () => {
       document.addEventListener("keydown", updateplayers);
       requestAnimationFrame(animatep);
     }
-
     animatep();
-    shootbal(player1, player2)
+    shootbal(player1, player2);
   };
   // main animation function
 
   const shootbal = (player1, player2) => {
+    //detecting click on page
+    document.addEventListener("click", (event) => {
+      const screenx = event.clientX;
+      const screeny = event.clientY;
+      console.log(`Clicked at (${screenx}, ${screeny})`);
+    });
     // declaring canvas
     const canvas = document.getElementById("myCanvas");
     const ctx = canvas.getContext("2d");
@@ -318,68 +321,3 @@ const Temporary = () => {
 
 export default Temporary;
 
-// function drawProjectile() {
-//   ctx.beginPath();
-//   ctx.arc(projectile.x, projectile.y, projectile.radius, 0, Math.PI * 2);
-//   ctx.fillStyle = projectile.color;
-//   ctx.fill();
-//   ctx.closePath();
-// }
-
-// function updateProjectile() {
-//   if (!projectile.isFalling) {
-//     projectile.y -= projectile.velocity.y;
-//     projectile.velocity.y -= projectile.gravity * projectile.weight;
-
-//     if (projectile.velocity.y <= 0) {
-//       projectile.isFalling = true; // Start falling when velocity becomes 0
-//     }
-//   } else {
-//     projectile.y += projectile.velocity.y;
-//     projectile.velocity.y += projectile.gravity * projectile.weight;
-//   }
-
-//   projectile.x += projectile.velocity.x; // Move the projectile horizontally
-
-//   if (projectile.x + projectile.radius > canvas.width) {
-//     projectile.velocity.x = 0;
-//     // ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
-//   }
-//   if (projectile.y + projectile.radius > canvas.height) {
-//     projectile.velocity.y = 0;
-//     projectile.velocity.x = 0;
-//   }
-//   if (projectile.y < 0) {
-//     projectile.velocity.y *= -1;
-//   }
-//   if (projectile.x < 0) {
-//     projectile.velocity.x = 0;
-//   }
-
-//   if (projectile.y === canvas.height) {
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-//     ctx.clearRect(
-//       projectile.x - projectile.radius,
-//       projectile.y - projectile.radius,
-//       projectile.x + projectile.radius,
-//       projectile.y + projectile.radius
-//     );
-//     return;
-//   }
-//   drawProjectile();
-// }
-
-// function animate(event) {
-//   ctx.clearRect(0, 0, canvas.width, canvas.height);
-//   updateProjectile();
-//   document.addEventListener("keydown", () => {
-//     switch (event.key) {
-//       case "apace":
-//         animate();
-//         break;
-//       default:
-//         break;
-//     }
-//   });
-//   requestAnimationFrame(animate);
-// }
