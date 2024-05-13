@@ -1,34 +1,55 @@
 import React, { useEffect, useState } from "react";
+import LifeBar from "../LifeBar/LifeBar";
 import "./Temporary.style.scss";
+import { useSelector, useDispatch } from "react-redux";
+import { GameState, shoot, hit } from "../../state/gamelogic/Gamelogic";
+
 // main component
 const Temporary = () => {
-  // handling input for power and angle
-  const [angleValue, setangleValue] = useState("");
-  const [powerValue, setpowerValue] = useState("");
-  // handling players turn
-  // making a flag for shooting the projectile
-  let spaceKeyPressed = false;
-  // detecting if the ball is still moving
-  let ballInMotion = true;
-  // detecting space key pressed
+  const gameMechanics = useSelector(GameState);
+  const dispatch = useDispatch();
+  let mylife1 = gameMechanics.lifep1;
+  let mylife2 = gameMechanics.lifep2;
+  let mybullets = gameMechanics.energyp1;
+  let ishit = false;
+
+  console.log(mylife1, mybullets);
   document.addEventListener("keydown", (event) => {
-    if (event.key === " " && ballInMotion) {
-      ballInMotion = false;
-      spaceKeyPressed = true;
-      // shootbal();
+    if (event.key === " ") {
+      playerinit();
     }
   });
-  // inputs for angle and power
-  const handleInputChange1 = (event) => {
-    setangleValue(event.target.value);
-  };
-  const handleInputChange2 = (event) => {
-    setpowerValue(event.target.value);
-  };
-  // primary load of screen
-  useEffect(() => {
-    playerinit();
+
+  //detecting click on page
+  document.addEventListener("click", (event) => {
+    event.preventDefault();
+    dispatch(shoot());
+    const screenx = event.clientX;
+    const screeny = event.clientY;
+    setShootingData((prevState) => ({
+      ...prevState,
+      xposition: screenx,
+    }));
+    setShootingData((prevState) => ({
+      ...prevState,
+      yposition: screeny,
+    }));
+    shootbal(shootingData);
   });
+  const [shootingData, setShootingData] = useState({
+    playerone: {},
+    playertwo: {},
+    xposition: 0,
+    yposition: 0,
+  });
+  // const [startPosition, setStartPosition] = useState({
+  //   player1: {},
+  //   player2: {},
+  // });
+  // primary load of screen
+  // useEffect(() => {
+  //   playerinit();
+  // }, []);
 
   // players
 
@@ -57,27 +78,16 @@ const Temporary = () => {
         y: 2,
       },
     };
+    // setStartPosition({
+    //   player1: { player1 },
+    //   player2: { player2 },
+    // });
 
     function drawPlayers() {
       ctx.fillStyle = player1.color;
       ctx.fillRect(player1.x, player1.y, player1.width, player1.height);
       ctx.fillStyle = player2.color;
       ctx.fillRect(player2.x, player2.y, player2.width, player2.height);
-      ctx.beginPath();
-      ctx.fillStyle = "purple";
-      ctx.fillRect(
-        (canvas.width * 2) / 3,
-        (canvas.height * 4.15) / 5,
-        canvas.width / 100,
-        canvas.height
-      );
-      ctx.fillRect(
-        (canvas.width * 1) / 3,
-        (canvas.height * 4.15) / 5,
-        canvas.width / 100,
-        canvas.height
-      );
-
       ctx.fill();
       ctx.closePath();
     }
@@ -150,174 +160,138 @@ const Temporary = () => {
     function animatep() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawPlayers();
+      setShootingData((prevState) => ({
+        ...prevState,
+        playerone: player1,
+      }));
+      setShootingData((prevState) => ({
+        ...prevState,
+        playertwo: player2,
+      }));
       document.addEventListener("keydown", updateplayers);
       requestAnimationFrame(animatep);
     }
     animatep();
-    shootbal(player1, player2);
   };
   // main animation function
 
-  const shootbal = (player1, player2) => {
-    //detecting click on page
-    document.addEventListener("click", (event) => {
-      const screenx = event.clientX;
-      const screeny = event.clientY;
-      console.log(`Clicked at (${screenx}, ${screeny})`);
-    });
+  const shootbal = (shootingdata) => {
+    // gathering the data from outside of function
+    let player1 = shootingData.playerone;
+    let player2 = shootingData.playertwo;
     // declaring canvas
     const canvas = document.getElementById("myCanvas");
     const ctx = canvas.getContext("2d");
+    shootingdata.xposition =
+      (canvas.width * shootingdata.xposition) / window.screen.width;
+    shootingdata.yposition =
+      (canvas.height * shootingdata.yposition) / window.screen.height;
+    let EndPoint = { x: shootingdata.xposition, y: shootingdata.yposition };
     // color for projectile
     ctx.fillStyle = "red";
-    //angle and power for projectile
-    let angle = (angleValue * Math.PI) / 180;
-    let power = powerValue * 0.1;
     // declaring projectile
-    let projectile = {
-      x: player1.x,
-      y: (7 * canvas.height) / 8,
+    let projectile1 = {
+      x: player1.x + player1.width / 2,
+      y: player1.y + player1.height / 2,
       radius: 3,
       color: "red",
       velocity: {
-        x: Math.cos(angle) * power,
-        y: Math.sin(angle) * power,
+        x: 2,
+        y: 2,
       },
       gravity: 0.2, // Gravity value
       weight: 0.2, // Weight of the ball
-      isFalling: false, // Flag to indicate if the projectile is falling
     };
+    let StartPoint = { x: player1.x, y: player1.y };
+    let distance = Math.sqrt(
+      (EndPoint.x - StartPoint.x) ** 2 + (EndPoint.y - StartPoint.y) ** 2
+    );
+    let vx = (EndPoint.x - StartPoint.x) / distance;
+    let vy = (EndPoint.y - StartPoint.y) / distance;
     // drawing the projectile
-    function drawProjectile() {
+    function drawProjectile1() {
       ctx.beginPath();
-      ctx.arc(projectile.x, projectile.y, projectile.radius, 0, Math.PI * 2);
-      ctx.fillStyle = projectile.color;
+      ctx.arc(projectile1.x, projectile1.y, projectile1.radius, 0, Math.PI * 2);
+      ctx.fillStyle = projectile1.color;
       ctx.fill();
       ctx.closePath();
     }
     // moving the projectile
-    function updateProjectile() {
-      //stop the animation if the ball missed
-      if (projectile.velocity.x === 0 && projectile.velocity.y === 0) {
-        setTimeout(function () {
-          spaceKeyPressed = false;
-          ballInMotion = true;
-        }, 2000);
+    function updateProjectile1() {
+      if (distance > 0 && ishit === false) {
+        // drawProjectile1();
+        projectile1.x += vx * 0.8;
+        projectile1.y += vy * 0.8;
       }
-      // detect the purple walls
+
       if (
-        (projectile.x + projectile.radius >= canvas.width / 3 &&
-          projectile.x + projectile.radius <=
-            canvas.width / 3 + canvas.width / 100 &&
-          projectile.y + projectile.radius >= (canvas.height * 4.15) / 5 &&
-          projectile.y + projectile.radius <= canvas.height) ||
-        (projectile.x + projectile.radius >= (canvas.width * 2) / 3 &&
-          projectile.x + projectile.radius <=
-            (canvas.width * 2) / 3 + canvas.width / 100 &&
-          projectile.y + projectile.radius >= (canvas.height * 4.15) / 5 &&
-          projectile.y + projectile.radius <= canvas.height)
-      ) {
-        // Collision with purple barrier detected
-        spaceKeyPressed = false;
-        ballInMotion = true;
-      }
-      if (
-        projectile.x + projectile.radius >= player1.x &&
-        projectile.x - projectile.radius <= player1.x + player1.width &&
-        projectile.y + projectile.radius >= player1.y &&
-        projectile.y - projectile.radius <= player1.y + player1.height
-      ) {
-        // Collision with player 1 detected
-        spaceKeyPressed = false;
-        ballInMotion = true;
-      }
-      if (
-        projectile.x + projectile.radius >= player2.x &&
-        projectile.x - projectile.radius <= player2.x + player2.width &&
-        projectile.y + projectile.radius >= player2.y &&
-        projectile.y - projectile.radius <= player2.y + player2.height
+        projectile1.x + projectile1.radius >= player2.x &&
+        projectile1.x - projectile1.radius <= player2.x + player2.width &&
+        projectile1.y + projectile1.radius >= player2.y &&
+        projectile1.y - projectile1.radius <= player2.y + player2.height
       ) {
         // Collision with player 2 detected
-        spaceKeyPressed = false;
-        ballInMotion = true;
-      }
-      if (!projectile.isFalling) {
-        projectile.y -= projectile.velocity.y;
-        projectile.velocity.y -= projectile.gravity * projectile.weight;
+        if (!ishit) {
+          dispatch(hit());
+        ishit = true;
 
-        if (projectile.velocity.y <= 0) {
-          projectile.isFalling = true; // Start falling when velocity becomes 0
+
+          
         }
-      } else {
-        projectile.y += projectile.velocity.y;
-        projectile.velocity.y += projectile.gravity * projectile.weight;
+        console.log("2 got hit");
+        ishit = true;
       }
 
-      projectile.x += projectile.velocity.x; // Move the projectile horizontally
-
-      if (projectile.x + projectile.radius > canvas.width) {
-        projectile.velocity.x = 0;
-        // ctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
+      if (projectile1.x + projectile1.radius > canvas.width) {
+        projectile1.velocity.x = 0;
       }
-      if (projectile.y + projectile.radius > canvas.height) {
-        projectile.velocity.y = 0;
-        projectile.velocity.x = 0;
+      if (projectile1.y + projectile1.radius > canvas.height) {
+        projectile1.velocity.y = 0;
+        projectile1.velocity.x = 0;
       }
-      if (projectile.y < 0) {
-        projectile.velocity.y *= -1;
+      if (projectile1.y < 0) {
+        projectile1.velocity.y *= -1;
       }
-      if (projectile.x < 0) {
-        projectile.velocity.x = 0;
+      if (projectile1.x < 0) {
+        projectile1.velocity.x = 0;
       }
 
-      if (projectile.y === canvas.height) {
+      if (projectile1.y === canvas.height) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.clearRect(
-          projectile.x - projectile.radius,
-          projectile.y - projectile.radius,
-          projectile.x + projectile.radius,
-          projectile.y + projectile.radius
-        );
-        return;
       }
-      drawProjectile();
+      drawProjectile1();
     }
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (spaceKeyPressed) {
-        updateProjectile();
-        drawProjectile();
+      updateProjectile1();
+      drawProjectile1();
+      distance = Math.sqrt(
+        (EndPoint.x - StartPoint.x) ** 2 + (EndPoint.y - StartPoint.y) ** 2
+      );
+      vx = (EndPoint.x - StartPoint.x) / distance;
+      vy = (EndPoint.y - StartPoint.y) / distance;
+      if (!ishit) {
+        requestAnimationFrame(animate);
       }
-
-      requestAnimationFrame(animate);
+      // calling the animation
     }
-    // calling the animation
-    animate();
+    if (!ishit) {
+      animate();
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
   };
-
   return (
     <div className="mainforall">
+      <div className="forlifes">
+        <LifeBar number={mylife1} bgcolor={"blue"} />
+        <LifeBar number={mylife2} bgcolor={"green"} />
+      </div>
+
       <canvas id="myCanvas"></canvas>
       <canvas id="myCanvas2"></canvas>
-
-      <div className="buttontempo">
-        <input
-          type="number"
-          placeholder="enter your angle"
-          value={angleValue}
-          onChange={handleInputChange1}
-        />
-        <input
-          type="number"
-          placeholder="enter your power"
-          value={powerValue}
-          onChange={handleInputChange2}
-        />
-      </div>
     </div>
   );
 };
 
 export default Temporary;
-
