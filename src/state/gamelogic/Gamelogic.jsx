@@ -3,20 +3,19 @@ import { createSlice } from "@reduxjs/toolkit";
 const gameSlice = createSlice({
   name: "gameLogic",
   initialState: {
-    energyp1: 9,
     lifep1: 100,
-    lifep2: 100,
+    player: {},
   },
   reducers: {
-    shoot: (state) => {
-      state.energyp1 -= 1;
-    },
     hit: (state) => {
-      state.lifep2 -= 15;
+      state.lifep1 -= 15;
     },
+    playagain: (state) =>{
+      state.lifep1 = 100
+    }
   },
 });
 
 export const GameState = (state) => state.gameLogic;
-export const { shoot, hit } = gameSlice.actions;
+export const { hit, playagain } = gameSlice.actions;
 export default gameSlice.reducer;

@@ -1,12 +1,22 @@
 .bar {
     height: 30px;
     position: relative;
-  }
-  .number {
+    display: flex;
+}
+.number {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-  }
+}
+.usersname{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 1rem;
+  font-weight: 500;
+  color: rgb(125, 225, 225);
+}
+  
   
