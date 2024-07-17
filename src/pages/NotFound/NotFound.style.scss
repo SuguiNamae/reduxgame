@@ -1,0 +1,26 @@
+.fornotfound{
+    height: 100dvh;
+    background: radial-gradient(#00FFFF, #BF00FF 75%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    :last-child{
+        color: black;
+        font-size: 1.2rem;
+        font-weight: 600;
+        transition: 1s;
+    }
+    :last-child:hover{
+        color: aliceblue;
+        font-size: 1.3rem;
+    }
+}
+.forspan{
+    color: #00FFFF;
+    font-size: 1.5rem;
+    background-color: rgba(0, 0, 0, 0.24);
+    padding: 10px;
+    border-radius: 20px;
+    margin-top: 10%;
+    margin-bottom: 5%;
+}

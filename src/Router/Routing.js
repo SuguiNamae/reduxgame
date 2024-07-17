@@ -2,7 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import Initiate from "../pages/initiate/Initiate";
 import NotFound from "../pages/NotFound/NotFound";
-import Gaming from "../pages/gameing/Gaming";
+import Gameing from "../pages/gameing/Gameing";
+import Training from "../pages/training/training";
 
   
   export const router = createBrowserRouter([
@@ -17,15 +18,11 @@ import Gaming from "../pages/gameing/Gaming";
     },
     {
       path: "/game",
-      element: <Gaming />,
+      element: <Gameing />,
     },
-    // {
-    //   path: "/contact-us",
-    //   element: <ContactUs />,
-    // },
-    // {
-    //   path: "/shopping",
-    //   element: <Shop/>
-    // }
+    {
+      path: "/tuturial",
+      element: <Training />,
+    },
   ]);
   

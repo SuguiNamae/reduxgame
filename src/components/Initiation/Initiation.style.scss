@@ -1,6 +1,35 @@
 .initiationforall{
     width: 100%;
     height: 100dvh;
-    background-color:azure;
-    color: blue;
+    background-color:rgb(116, 255, 255);
+    color: rgb(70, 93, 58);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    p{
+        font-size: 2rem;
+        padding-top:5%;
+        padding-bottom: 2rem;
+    }
+    input{
+        color: rgb(31, 30, 30);
+        background-color: bisque;
+        width: 22%;
+        height: 2rem;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        text-align: center;
+        margin-bottom: 5rem;
+        font-weight: 500;
+        margin-top: 2%;
+    }
+    :last-child{
+        color: rgb(107, 107, 247);
+        font-size: 2rem;
+        transition: 0.4s;
+    }
+    :last-child:hover{
+        color: rgb(6, 2, 252);
+    }
 }

@@ -1,11 +1,11 @@
 import React from "react";
 import LifeBar from "../LifeBar/LifeBar";
-import "./Temporary.style.scss";
+import "./gaming.style.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { GameState, hit, playagain } from "../../state/gamelogic/Gamelogic";
 import { Link } from "react-router-dom";
-
-const Temporary = () => {
+import pic from "../../images/spacecraft.jpg";
+const Gaming = () => {
   const gameMechanics = useSelector(GameState);
   const dispatch = useDispatch();
   let mylife1 = gameMechanics.lifep1;
@@ -14,7 +14,7 @@ const Temporary = () => {
   let player1a = {};
   // the space key makes the player
   const playgame = () => {
-    if (true) {
+    if (mylife1 > 0) {
       playerinit();
       setTimeout(() => {
         shootbal();
@@ -31,21 +31,19 @@ const Temporary = () => {
   const playerinit = () => {
     const canvas = document.getElementById("myCanvas2");
     const ctx = canvas.getContext("2d");
+    const image = document.getElementById("source");
     const player1 = {
       width: (canvas.width * 1) / 10,
       height: (canvas.height * 1) / 10,
       x: canvas.width / 20,
       y: (canvas.height * 6) / 7,
-      color: "blue",
       speed: {
-        x: 2,
-        y: 2,
+        x: 0.7,
+        y: 0.7,
       },
     };
     function drawPlayers() {
-      ctx.fillStyle = player1.color;
-      ctx.fillRect(player1.x, player1.y, player1.width, player1.height);
-      ctx.closePath();
+      ctx.drawImage(image, player1.x, player1.y, player1.width, player1.height);
     }
     function updateplayers(event) {
       //making sure player one wont go off screen
@@ -102,7 +100,7 @@ const Temporary = () => {
       x: canvas.width / 2,
       y: canvas.height / 2,
       radius: 3,
-      color: "red",
+      color: "aqua",
       velocity: {
         x: 0.21,
         y: 0.2,
@@ -126,26 +124,26 @@ const Temporary = () => {
       }
       // keeping the projectile in screen
       if (projectile1.x + projectile1.radius > canvas.width) {
-        projectile1.velocity.x *= -1.1;
-        if (Math.abs(projectile1.velocity.x) > 1) {
+        projectile1.velocity.x *= -1.07;
+        if (Math.abs(projectile1.velocity.x) > 1.5) {
           projectile1.velocity.x *= 0.9;
         }
       }
       if (projectile1.y + projectile1.radius > canvas.height) {
-        projectile1.velocity.y *= -1.1;
-        if (Math.abs(projectile1.velocity.y) > 1) {
+        projectile1.velocity.y *= -1.07;
+        if (Math.abs(projectile1.velocity.y) > 1.5) {
           projectile1.velocity.y *= 0.9;
         }
       }
       if (projectile1.y < 0) {
-        projectile1.velocity.y *= -1.1;
-        if (Math.abs(projectile1.velocity.y) > 1) {
+        projectile1.velocity.y *= -1.07;
+        if (Math.abs(projectile1.velocity.y) > 1.5) {
           projectile1.velocity.y *= 0.9;
         }
       }
       if (projectile1.x < 0) {
-        projectile1.velocity.x *= -1.1;
-        if (Math.abs(projectile1.velocity.x) > 1) {
+        projectile1.velocity.x *= -1.07;
+        if (Math.abs(projectile1.velocity.x) > 1.5) {
           projectile1.velocity.x *= 0.9;
         }
       }
@@ -154,37 +152,37 @@ const Temporary = () => {
       if (
         Math.abs(
           projectile1.y + projectile1.radius - player1a.y - player1a.height
-        ) < 0.2 &&
+        ) < 5 &&
         player1a.x <= projectile1.x + projectile1.radius &&
         projectile1.x + projectile1.radius <= player1a.x + player1a.width
       ) {
-        projectile1.velocity.y *= -1.1;
+        projectile1.velocity.y *= -1.07;
         dispatch(hit());
-        if (Math.abs(projectile1.velocity.y) > 1) {
+        if (Math.abs(projectile1.velocity.y) > 1.5) {
           projectile1.velocity.y *= 0.9;
         }
       }
       // top
       if (
-        Math.abs(projectile1.y + projectile1.radius - player1a.y) < 0.2 &&
+        Math.abs(projectile1.y + projectile1.radius - player1a.y) < 0.7 &&
         player1a.x <= projectile1.x + projectile1.radius &&
         projectile1.x + projectile1.radius <= player1a.x + player1a.width
       ) {
-        projectile1.velocity.y *= -1.1;
+        projectile1.velocity.y *= -1.07;
         dispatch(hit());
-        if (Math.abs(projectile1.velocity.y) > 1) {
+        if (Math.abs(projectile1.velocity.y) > 1.5) {
           projectile1.velocity.y *= 0.9;
         }
       }
       // left
       if (
-        Math.abs(projectile1.x + projectile1.radius - player1a.x) < 0.2 &&
+        Math.abs(projectile1.x + projectile1.radius - player1a.x) < 2 &&
         player1a.y <= projectile1.y + projectile1.radius &&
         projectile1.y + projectile1.radius <= player1a.y + player1a.height
       ) {
-        projectile1.velocity.x *= -1.1;
+        projectile1.velocity.x *= -1.07;
         dispatch(hit());
-        if (Math.abs(projectile1.velocity.x) > 1) {
+        if (Math.abs(projectile1.velocity.x) > 1.5) {
           projectile1.velocity.x *= 0.9;
         }
       }
@@ -192,13 +190,13 @@ const Temporary = () => {
       if (
         Math.abs(
           projectile1.x + projectile1.radius - player1a.x - player1a.width
-        ) < 0.2 &&
+        ) < 2 &&
         player1a.y <= projectile1.y + projectile1.radius &&
         projectile1.y + projectile1.radius <= player1a.y + player1a.height
       ) {
-        projectile1.velocity.x *= -1.1;
+        projectile1.velocity.x *= -1.07;
         dispatch(hit());
-        if (Math.abs(projectile1.velocity.x) > 1) {
+        if (Math.abs(projectile1.velocity.x) > 1.5) {
           projectile1.velocity.x *= 0.9;
         }
       }
@@ -221,20 +219,24 @@ const Temporary = () => {
           </div>
           <canvas id="myCanvas"></canvas>
           <canvas id="myCanvas2"></canvas>
+          <img id="source" src={pic} alt="player" />
         </div>
       ) : (
         <div className="gameover">
+          <p>sorry but you lost</p>
           <Link
             to={"/"}
             onClick={() => {
-              dispatch(playagain());
-              stilgoing = false;
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
             }}
           >
             go to home
           </Link>
           <button
             onClick={() => {
+              window.location.reload();
               dispatch(playagain());
               stilgoing = false;
             }}
@@ -247,4 +249,4 @@ const Temporary = () => {
   );
 };
 
-export default Temporary;
+export default Gaming;
